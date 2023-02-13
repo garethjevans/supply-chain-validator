@@ -3,17 +3,16 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"github.com/go-yaml/yaml"
+	"k8s.io/apimachinery/pkg/util/yaml"
+	"os"
+
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/vmware-tanzu/cartographer/pkg/apis/v1alpha1"
-	"os"
 )
 
 // ValidateCmd a struct for the validate command.
 type ValidateCmd struct {
-	//Cmd  *cobra.Command
-	//Args []string
 	File string
 }
 
@@ -28,11 +27,9 @@ func NewValidateCmd() *cobra.Command {
 		Example: "validate -f <file>",
 		Aliases: []string{"check"},
 		Run: func(cmd *cobra.Command, args []string) {
-			//c.Cmd = cmd
-			//c.Args = args
 			err := c.Run()
 			if err != nil {
-				logrus.Fatalf("unable to run command: %s", err)
+				logrus.Fatalf("%s", err)
 			}
 		},
 		Args: cobra.NoArgs,
@@ -55,9 +52,15 @@ func (c *ValidateCmd) Run() error {
 	if err != nil {
 		return err
 	}
+
 	err = yaml.Unmarshal(b, &csc)
 	if err != nil {
 		return err
+	}
+
+	err = csc.ValidateCreate()
+	if err != nil {
+		return fmt.Errorf("unable to validate supply chain\n%s:\n%+v", string(b), err)
 	}
 
 	fmt.Println("OK")
