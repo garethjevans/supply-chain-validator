@@ -3,8 +3,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"k8s.io/apimachinery/pkg/util/yaml"
 	"os"
+
+	"k8s.io/apimachinery/pkg/util/yaml"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
