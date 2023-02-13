@@ -1,0 +1,60 @@
+---
+env:
+  - GO111MODULE=on
+  - CGO_ENABLED=0
+before:
+  hooks:
+    - go mod download
+
+builds:
+  - id: scv-linux
+    main: ./cmd/scv/scv.go
+    binary: scv
+    ldflags:
+      - -X github.com/garethjevans/supply-chain-validator/pkg/version.Version={{.Version}} -X github.com/garethjevans/supply-chain-validator/pkg/version.Revision={{.ShortCommit}} -X github.com/garethjevans/supply-chain-validator/pkg/version.BuildDate={{.CommitDate}} -X github.com/garethjevans/supply-chain-validator/pkg/version.BuiltBy=goreleaser
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+      - s390x
+      - ppc64le
+
+  - id: scv-darwin
+    main: ./cmd/scv/scv.go
+    binary: scv
+    ldflags:
+      - -X github.com/garethjevans/supply-chain-validator/pkg/version.Version={{.Version}} -X github.com/garethjevans/supply-chain-validator/pkg/version.Revision={{.ShortCommit}} -X github.com/garethjevans/supply-chain-validator/pkg/version.BuildDate={{.CommitDate}} -X github.com/garethjevans/supply-chain-validator/pkg/version.BuiltBy=goreleaser
+    goos:
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+
+  - id: scv-windows-amd64
+    main: ./cmd/scv/scv.go
+    binary: scv
+    ldflags:
+      - -X github.com/garethjevans/supply-chain-validator/pkg/version.Version={{.Version}} -X github.com/garethjevans/supply-chain-validator/pkg/version.Revision={{.ShortCommit}} -X github.com/garethjevans/supply-chain-validator/pkg/version.BuildDate={{.CommitDate}} -X github.com/garethjevans/supply-chain-validator/pkg/version.BuiltBy=goreleaser
+    goos:
+      - windows
+    goarch:
+      - amd64
+
+archives:
+  - name_template: "{{ .ProjectName }}-{{ .Os }}-{{ .Arch }}"
+    format_overrides:
+      - goos: windows
+        format: zip
+
+checksum:
+  name_template: "{{ .ProjectName }}-checksums.txt"
+  algorithm: sha256
+
+changelog:
+  skip: false
+
+release:
+  draft: false
+  prerelease: false
+  name_template: "{{.Tag}}"
