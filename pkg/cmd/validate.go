@@ -1,20 +1,15 @@
 package cmd
 
 import (
-	"github.com/fatih/color"
-
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
-)
-
-var (
-	colorError = color.New(color.FgRed).SprintFunc()
 )
 
 // ValidateCmd a struct for the validate command.
 type ValidateCmd struct {
 	Cmd  *cobra.Command
 	Args []string
+	Path string
 }
 
 // NewValidateCmd creates a new validate command.

@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/garethjevans/supply-chain-validator/pkg/cmd"
 	"os"
 	"runtime/debug"
 	"strings"
+
+	"github.com/garethjevans/supply-chain-validator/pkg/cmd"
 
 	"github.com/garethjevans/supply-chain-validator/pkg/version"
 
