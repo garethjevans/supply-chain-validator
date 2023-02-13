@@ -1,6 +1,6 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/garethjevans/supply-chain-validator)](https://goreportcard.com/report/github.com/garethjevans/inspect)
+[![Go Report Card](https://goreportcard.com/badge/github.com/garethjevans/supply-chain-validator)](https://goreportcard.com/report/github.com/garethjevans/supply-chain-validator)
 
-# inspect
+# supply-chain-validator
 
 a small CLI that can validate a supply chain
 

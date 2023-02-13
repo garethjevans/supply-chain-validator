@@ -119,7 +119,7 @@ goreleaser:
 	step-go-releaser --organisation=$(ORG) --revision=$(REV) --branch=$(BRANCH) --build-date=$(BUILD_DATE) --go-version=$(GO_VERSION) --root-package=$(ROOT_PACKAGE) --version=$(VERSION)
 
 docs: build
-	./build/inspect docs
+	./build/scv docs
 
 lint:
 	golangci-lint run
