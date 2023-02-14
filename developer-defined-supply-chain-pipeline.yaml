@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  labels:
+    apps.tanzu.vmware.com/pipeline: supply-chain-pipeline
+  name: developer-defined-supply-chain-pipeline
+  namespace: dev
+spec:
+  params:
+  - name: source-url
+    type: string
+  - name: source-revision
+    type: string
+  tasks:
+  - name: test
+    params:
+    - name: source-url
+      value: $(params.source-url)
+    - name: source-revision
+      value: $(params.source-revision)
+    taskSpec:
+      metadata: {}
+      params:
+      - name: source-url
+        type: string
+      - name: source-revision
+        type: string
+      steps:
+      - image: ghcr.io/garethjevans/supply-chain-validator:latest
+        name: test
+        resources: {}
+        script: |
+          cd `mktemp -d`
+          wget -qO- $(params.source-url) | tar xvz -m
+          scv validator config/cluster-supply-chain.yaml
