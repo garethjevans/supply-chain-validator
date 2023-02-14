@@ -12,7 +12,7 @@ RUN wget https://github.com/carvel-dev/ytt/releases/download/v${YTT_VERSION}/ytt
     mv ytt-${TARGETOS}-${TARGETARCH} /usr/bin/ytt && \
     chmod a+x /usr/bin/ytt
 
-COPY dist/scv-${TARGETOS}_${TARGETOS}_${TARGETARCH}/scv /usr/bin/scv
+COPY dist/scv-${TARGETOS}_${TARGETOS}_${TARGETARCH}_v1/scv /usr/bin/scv
 
 ENTRYPOINT [ "/usr/bin/scv" ]
 
