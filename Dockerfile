@@ -1,10 +1,17 @@
-FROM --platform=${BUILDPLATFORM} alpine:3.17.2
+FROM --platform=${BUILDPLATFORM} ubuntu:22.04
+LABEL maintainer="Gareth Evans <gareth@bryncynfelin.co.uk>"
 
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETPLATFORM
 
-LABEL maintainer="Gareth Evans <gareth@bryncynfelin.co.uk>"
+RUN apt-get update && apt install wget -y
+
+ENV YTT_VERSION 0.40.4
+RUN wget https://github.com/carvel-dev/ytt/releases/download/v${YTT_VERSION}/ytt-${TARGETOS}-${TARGETARCH} && \
+    mv ytt-${TARGETOS}-${TARGETARCH} /usr/bin/ytt && \
+    chmod a+x /usr/bin/ytt
+
 COPY dist/scv-${TARGETOS}_${TARGETOS}_${TARGETARCH}/scv /usr/bin/scv
 
 ENTRYPOINT [ "/usr/bin/scv" ]
