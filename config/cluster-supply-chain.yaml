@@ -1,0 +1,46 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:assert", "assert")
+
+---
+apiVersion: carto.run/v1alpha1
+kind: ClusterSupplyChain
+metadata:
+  name: supply-chain-supply-chain
+spec:
+  selectorMatchExpressions:
+    - key: 'apps.tanzu.vmware.com/workload-type'
+      operator: In
+      values: 
+      - supply-chain
+
+  resources:
+  - name: source-provider
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: source-template
+    params:
+      - name: serviceAccount
+        default: #@ data.values.service_account
+      - name: gitImplementation
+        value: #@ data.values.git_implementation
+
+  - name: source-tester
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: testing-pipeline
+    sources:
+    - resource: source-provider
+      name: source
+
+  - name: source-scanner
+    templateRef:
+      kind: ClusterSourceTemplate
+      name: source-scanner-template
+    params:
+      - name: scanning_source_policy
+        default: #@ data.values.scanning.source.policy
+      - name: scanning_source_template
+        default: #@ data.values.scanning.source.template
+    sources:
+      - resource: source-tester
+        name: source

@@ -26,10 +26,10 @@ spec:
       - name: source-revision
         type: string
       steps:
-      - image: ghcr.io/garethjevans/supply-chain-validator:latest
+      - image: ghcr.io/garethjevans/supply-chain-validator:0.0.8
         name: test
         resources: {}
         script: |
           cd `mktemp -d`
           wget -qO- $(params.source-url) | tar xvz -m
-          scv validator config/cluster-supply-chain.yaml
+          ytt -f ./config | scv validate
