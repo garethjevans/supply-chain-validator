@@ -3,7 +3,9 @@ package cmd
 import (
 	"fmt"
 	"io"
+	"log"
 	"os"
+	"strings"
 
 	"k8s.io/apimachinery/pkg/util/yaml"
 
@@ -27,8 +29,11 @@ func NewValidateCmd() *cobra.Command {
 		Long:    "",
 		Example: "validate <file / or stdin>",
 		Aliases: []string{"check"},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return c.Run(cmd, args)
+		Run: func(cmd *cobra.Command, args []string) {
+			err := c.Run(cmd, args)
+			if err != nil {
+				log.Fatal(err)
+			}
 		},
 		Args: cobra.MaximumNArgs(1),
 	}
@@ -57,6 +62,10 @@ func (c *ValidateCmd) Run(cmd *cobra.Command, args []string) error {
 	b, err := io.ReadAll(inputReader)
 	if err != nil {
 		return fmt.Errorf("failed process input: %v", err)
+	}
+
+	if strings.Contains(string(b), "#@") {
+		return fmt.Errorf("input contains ytt declarations, these should be removed before validating")
 	}
 
 	csc := v1alpha1.ClusterSupplyChain{}
