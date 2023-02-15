@@ -1,13 +1,13 @@
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"io"
+	"k8s.io/apimachinery/pkg/util/yaml"
 	"log"
 	"os"
-	"strings"
-
-	"k8s.io/apimachinery/pkg/util/yaml"
+	"regexp"
 
 	"github.com/spf13/cobra"
 	"github.com/vmware-tanzu/cartographer/pkg/apis/v1alpha1"
@@ -64,23 +64,49 @@ func (c *ValidateCmd) Run(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed process input: %v", err)
 	}
 
-	if strings.Contains(string(b), "#@") {
+	r, err := regexp.MatchString("^#@", string(b))
+	if err != nil {
+		return err
+	}
+	if r {
 		return fmt.Errorf("input contains ytt declarations, these should be removed before validating")
 	}
 
-	csc := v1alpha1.ClusterSupplyChain{}
-
-	err = yaml.Unmarshal(b, &csc)
+	var cscs []v1alpha1.ClusterSupplyChain
+	err = UnmarshalAllClusterSupplyChain(b, &cscs)
 	if err != nil {
 		return err
 	}
 
-	err = csc.ValidateCreate()
-	if err != nil {
-		return fmt.Errorf("unable to validate supply chain\n%s:\n%+v", string(b), err)
+	for _, csc := range cscs {
+		fmt.Println("validating", csc.Name)
+		err = csc.ValidateCreate()
+		if err != nil {
+			return fmt.Errorf("unable to validate supply chain\n%s:\n%+v", string(b), err)
+		}
 	}
 
 	fmt.Println("OK")
 
+	return nil
+}
+
+func UnmarshalAllClusterSupplyChain(in []byte, out *[]v1alpha1.ClusterSupplyChain) error {
+	r := bytes.NewReader(in)
+	decoder := yaml.NewYAMLToJSONDecoder(r)
+
+	for {
+		var csc v1alpha1.ClusterSupplyChain
+		if err := decoder.Decode(&csc); err != nil {
+			// Break when there are no more documents to decode
+			if err != io.EOF {
+				return err
+			}
+			break
+		}
+		if csc.Kind == "ClusterSupplyChain" {
+			*out = append(*out, csc)
+		}
+	}
 	return nil
 }
