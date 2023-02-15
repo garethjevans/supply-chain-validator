@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"k8s.io/apimachinery/pkg/util/yaml"
 	"log"
 	"os"
 	"regexp"
+
+	"k8s.io/apimachinery/pkg/util/yaml"
 
 	"github.com/spf13/cobra"
 	"github.com/vmware-tanzu/cartographer/pkg/apis/v1alpha1"
