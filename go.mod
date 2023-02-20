@@ -3,11 +3,11 @@ module github.com/garethjevans/supply-chain-validator
 go 1.19
 
 require (
-	github.com/go-yaml/yaml v2.1.0+incompatible
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
 	github.com/spf13/pflag v1.0.5
-	github.com/vmware-tanzu/cartographer v0.6.3
+	github.com/vmware-tanzu/cartographer v1.2.0
+	k8s.io/apimachinery v0.25.5
 )
 
 require (
@@ -60,7 +60,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.25.5 // indirect
 	k8s.io/apiextensions-apiserver v0.25.5 // indirect
-	k8s.io/apimachinery v0.25.5 // indirect
 	k8s.io/client-go v0.25.5 // indirect
 	k8s.io/component-base v0.25.5 // indirect
 	k8s.io/klog/v2 v2.80.1 // indirect
