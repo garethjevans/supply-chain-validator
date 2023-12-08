@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} ubuntu:23.10
+FROM --platform=${BUILDPLATFORM} ubuntu:24.04
 LABEL maintainer="Gareth Evans <gareth@bryncynfelin.co.uk>"
 
 ARG TARGETOS
